@@ -62,36 +62,36 @@
     <value>..\Toukaman_icon.ico;System.Drawing.Icon, System.Drawing</value>
   </data>
   <data name="OpenButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\Open_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\Open_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="SaveButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\Save_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\Save_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="PasteButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\paste_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\paste_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="UndoButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\undo_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\undo_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="RedoButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\redo_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\redo_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="FillButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\bucket_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\bucket_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="ProtectedFillButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\dashed_bucket_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\dashed_bucket_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="RectangleButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\rectangle_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\rectangle_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="ColorButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\magic_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\magic_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="EraserButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\Eraser_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\Eraser_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
   <data name="FinishButtonIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\ボタン用アイコン\Star_icon.png;System.Drawing.Bitmap, System.Drawing</value>
+    <value>..\ボタン用アイコン\Star_icon.png;System.Drawing.Bitmap, System.Drawing</value>
   </data>
 </root>

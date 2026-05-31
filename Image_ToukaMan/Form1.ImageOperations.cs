@@ -1,10 +1,23 @@
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
 
 namespace Image_ToukaMan
 {
     public partial class Form1
     {
+        private static readonly string[] SupportedImageExtensions =
+        [
+            ".png",
+            ".jpg",
+            ".jpeg",
+            ".bmp",
+            ".gif",
+            ".tif",
+            ".tiff",
+            ".webp"
+        ];
+
         private void Canvas_MouseDown(object? sender, MouseEventArgs e)
         {
             if (currentBitmap is null || e.Button != MouseButtons.Left)
@@ -123,7 +136,7 @@ namespace Image_ToukaMan
 
             using var dialog = new OpenFileDialog
             {
-                Filter = "画像ファイル|*.png;*.bmp;*.jpg;*.jpeg;*.gif;*.tif;*.tiff|すべてのファイル|*.*",
+                Filter = "画像ファイル|*.png;*.jpg;*.jpeg;*.bmp;*.gif;*.tif;*.tiff;*.webp|すべてのファイル|*.*",
                 Title = "画像を開く"
             };
 
@@ -137,13 +150,97 @@ namespace Image_ToukaMan
         {
             try
             {
-                using var bitmap = new Bitmap(filePath);
+                using var bitmap = LoadBitmapFromFile(filePath);
                 LoadBitmap(bitmap, filePath);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(this, $"画像を読み込めませんでした。\r\n{ex.Message}", "読み込みエラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        //-------------------------------------------------------------------------------
+        // 指定された画像ファイルを編集用のBitmapとして読み込む処理
+        //-------------------------------------------------------------------------------
+        private static Bitmap LoadBitmapFromFile(string filePath)
+        {
+            if (!IsSupportedImageFile(filePath))
+            {
+                throw new NotSupportedException("対応していない画像形式です。");
+            }
+
+            try
+            {
+                using var source = new Bitmap(filePath);
+                return CloneBitmap(source);
+            }
+            catch when (ShouldTryWindowsImageCodec(filePath))
+            {
+                return LoadBitmapWithWindowsImageCodec(filePath);
+            }
+        }
+
+        //-------------------------------------------------------------------------------
+        // 対応している画像拡張子かどうかを判定する処理
+        //-------------------------------------------------------------------------------
+        private static bool IsSupportedImageFile(string filePath)
+        {
+            var extension = Path.GetExtension(filePath);
+            return SupportedImageExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
+        }
+
+        //-------------------------------------------------------------------------------
+        // System.Drawingで読み込めない場合にWindows画像コーデックを試すか判定する処理
+        //-------------------------------------------------------------------------------
+        private static bool ShouldTryWindowsImageCodec(string filePath)
+        {
+            var extension = Path.GetExtension(filePath);
+            return SupportedImageExtensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
+        }
+
+        //-------------------------------------------------------------------------------
+        // Windows画像コーデックを使って画像ファイルをBitmapとして読み込む処理
+        //-------------------------------------------------------------------------------
+        private static Bitmap LoadBitmapWithWindowsImageCodec(string filePath)
+        {
+            using var stream = File.OpenRead(filePath);
+            var decoder = System.Windows.Media.Imaging.BitmapDecoder.Create(
+                stream,
+                System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat,
+                System.Windows.Media.Imaging.BitmapCacheOption.OnLoad);
+
+            var frame = decoder.Frames[0];
+            var converted = new System.Windows.Media.Imaging.FormatConvertedBitmap();
+            converted.BeginInit();
+            converted.Source = frame;
+            converted.DestinationFormat = System.Windows.Media.PixelFormats.Bgra32;
+            converted.EndInit();
+            converted.Freeze();
+
+            var width = converted.PixelWidth;
+            var height = converted.PixelHeight;
+            var stride = width * 4;
+            var pixels = new byte[stride * height];
+            converted.CopyPixels(pixels, stride, 0);
+
+            var bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            if (converted.DpiX > 0 && converted.DpiY > 0)
+            {
+                bitmap.SetResolution((float)converted.DpiX, (float)converted.DpiY);
+            }
+
+            var rect = new Rectangle(0, 0, width, height);
+            var data = bitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            try
+            {
+                Marshal.Copy(pixels, 0, data.Scan0, pixels.Length);
+            }
+            finally
+            {
+                bitmap.UnlockBits(data);
+            }
+
+            return bitmap;
         }
 
         private void LoadBitmap(Bitmap bitmap, string? filePath)
@@ -247,6 +344,91 @@ namespace Image_ToukaMan
             catch (Exception ex)
             {
                 MessageBox.Show(this, $"保存に失敗しました。\r\n{ex.Message}", "保存エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //-------------------------------------------------------------------------------
+        // ドロップされたフォルダ直下の対応画像をPNGに一括変換する処理
+        //-------------------------------------------------------------------------------
+        private void ConvertDroppedFolderToPng(string folderPath)
+        {
+            var imageFiles = Directory
+                .EnumerateFiles(folderPath)
+                .Where(IsSupportedImageFile)
+                .Where(file => !string.Equals(Path.GetExtension(file), ".png", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(file => file, StringComparer.CurrentCultureIgnoreCase)
+                .ToArray();
+
+            if (imageFiles.Length == 0)
+            {
+                MessageBox.Show(this, "変換対象の画像が見つかりませんでした。", "フォルダ変換", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                this,
+                $"{Path.GetFileName(folderPath)} 内の画像 {imageFiles.Length} 件を PNG に変換します。\r\n変換後の PNG は同じフォルダに保存します。",
+                "フォルダ変換",
+                MessageBoxButtons.OKCancel,
+                MessageBoxIcon.Information);
+
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            var convertedCount = 0;
+            var failedFiles = new List<string>();
+
+            foreach (var imageFile in imageFiles)
+            {
+                try
+                {
+                    using var bitmap = LoadBitmapFromFile(imageFile);
+                    bitmap.Save(CreateAvailablePngPath(imageFile), ImageFormat.Png);
+                    convertedCount++;
+                }
+                catch
+                {
+                    failedFiles.Add(Path.GetFileName(imageFile));
+                }
+            }
+
+            statusLabel.Text = $"フォルダ変換が完了しました: {convertedCount} 件";
+
+            if (failedFiles.Count == 0)
+            {
+                MessageBox.Show(this, $"{convertedCount} 件の画像を PNG に変換しました。", "フォルダ変換", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            MessageBox.Show(
+                this,
+                $"{convertedCount} 件の画像を PNG に変換しました。\r\n失敗: {failedFiles.Count} 件\r\n\r\n{string.Join("\r\n", failedFiles.Take(10))}",
+                "フォルダ変換",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+        }
+
+        //-------------------------------------------------------------------------------
+        // 既存ファイルと重複しないPNG保存先パスを作成する処理
+        //-------------------------------------------------------------------------------
+        private static string CreateAvailablePngPath(string sourcePath)
+        {
+            var directory = Path.GetDirectoryName(sourcePath) ?? string.Empty;
+            var basePath = Path.Combine(directory, $"{Path.GetFileNameWithoutExtension(sourcePath)}.png");
+            if (!File.Exists(basePath))
+            {
+                return basePath;
+            }
+
+            for (var index = 1; ; index++)
+            {
+                var candidate = Path.Combine(directory, $"{Path.GetFileNameWithoutExtension(sourcePath)}_{index}.png");
+                if (!File.Exists(candidate))
+                {
+                    return candidate;
+                }
             }
         }
 

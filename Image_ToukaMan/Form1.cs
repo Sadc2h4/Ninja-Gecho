@@ -314,7 +314,14 @@ namespace Image_ToukaMan
 
         private void Form1_DragEnter(object? sender, DragEventArgs e)
         {
-            if (e.Data?.GetDataPresent(DataFormats.FileDrop) == true || e.Data?.GetDataPresent(DataFormats.Bitmap) == true)
+            if (e.Data?.GetData(DataFormats.FileDrop) is string[] files &&
+                files.Any(path => Directory.Exists(path) || IsSupportedImageFile(path)))
+            {
+                e.Effect = DragDropEffects.Copy;
+                return;
+            }
+
+            if (e.Data?.GetDataPresent(DataFormats.Bitmap) == true)
             {
                 e.Effect = DragDropEffects.Copy;
             }
@@ -324,7 +331,17 @@ namespace Image_ToukaMan
         {
             if (e.Data?.GetData(DataFormats.FileDrop) is string[] files && files.Length > 0)
             {
-                LoadImageFromFile(files[0]);
+                if (Directory.Exists(files[0]))
+                {
+                    ConvertDroppedFolderToPng(files[0]);
+                    return;
+                }
+
+                if (IsSupportedImageFile(files[0]))
+                {
+                    LoadImageFromFile(files[0]);
+                }
+
                 return;
             }
 

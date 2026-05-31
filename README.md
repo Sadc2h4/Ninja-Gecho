@@ -11,7 +11,7 @@ Ninja_Gecho is a lightweight Windows tool for making image backgrounds transpare
 
 ## ダウンロード
 
-<a href="https://github.com/Sadc2h4/Ninja-Gecho/releases/tag/v1.1">
+<a href="https://github.com/Sadc2h4/Ninja-Gecho/releases/tag/v1.3">
   <img
     src="https://raw.githubusercontent.com/Sadc2h4/brand-assets/main/button/Download_Button_1.png"
     alt="Download .zip"
@@ -30,6 +30,14 @@ Ninja_Gecho is a lightweight Windows tool for making image backgrounds transpare
 | 消しゴムモード / Eraser | 16x16 pixel eraser で部分的に透過します. |
 | フィニッシュ / Finish | 透明部分のふちに残った半端な色をなじませます. |
 | 現在の拡大率で保存 / Save Current Zoom | 25%, 50%, 200%, 400% など,表示倍率に合わせて pixel-perfect resized PNG を保存します. |
+| 対応形式 / Input formats | PNG, JPEG, BMP, GIF, TIFF, WebP を読み込めます. |
+| フォルダ変換 / Folder conversion | フォルダをドラッグ&ドロップすると,フォルダ直下の対応画像を PNG に一括変換します. |
+
+## Latest Changes / v1.3
+
+- WebP, GIF, BMP, TIFF の読み込みに対応しました.
+- フォルダのドラッグ&ドロップで,フォルダ直下の対応画像を PNG に一括変換できるようにしました.
+- 変換先に同名 PNG が存在する場合は,`_1`, `_2` のように連番を付けて保存します.
 
 ## Setup
 
@@ -42,12 +50,13 @@ Ninja_Gecho.exe
 
 ## Usage / 使い方
 
-1. `ファイル > 開く` から画像を開きます.
+1. `ファイル > 開く` から画像を開きます. PNG, JPEG, BMP, GIF, TIFF, WebP に対応しています.
 2. ツールバーから透過モードを選び,画像上をクリックします.
 3. `誤差許容度(0-255)` で同色判定の幅を調整します.
 4. `不透明度(0-255)` で透過後の alpha を指定します.完全透過は `0` です.
 5. `ファイル > 名前を付けて保存` で通常 PNG 保存します.
 6. `ファイル > 現在の拡大率で保存` で,表示倍率のサイズにピクセルを保ったままリサイズして PNG 保存します.
+7. フォルダをウィンドウへドラッグ&ドロップすると,フォルダ直下の対応画像を同じフォルダへ PNG として一括変換します.
 
 ## Protected Bucket Notes
 
