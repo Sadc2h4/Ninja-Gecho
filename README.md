@@ -4,7 +4,7 @@
 ![Platform](https://img.shields.io/badge/platform-Windows%20x64-0078D4?style=flat-square&logo=windows&logoColor=white)
 ![Architecture](https://img.shields.io/badge/arch-x64-gray?style=flat-square)
 
-<img width="700" height="600" alt="MainConsoleBG" src="https://github.com/user-attachments/assets/4319c047-d691-429d-8ebe-1e44d76801ea" />
+<img width="730" height="525" alt="MainConsoleBG" src="https://github.com/user-attachments/assets/4319c047-d691-429d-8ebe-1e44d76801ea" />
 
 
 ## 概要
