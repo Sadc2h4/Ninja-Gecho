@@ -11,9 +11,9 @@
     <AssemblyName>Ninja_Gecho</AssemblyName>
     <Product>Ninja_Gecho</Product>
     <Title>Ninja_Gecho</Title>
-    <Version>1.3.0</Version>
-    <AssemblyVersion>1.3.0.0</AssemblyVersion>
-    <FileVersion>1.3.0.0</FileVersion>
+    <Version>1.4.0</Version>
+    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <FileVersion>1.4.0.0</FileVersion>
     <Authors>C2H4</Authors>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <DebugType>none</DebugType>

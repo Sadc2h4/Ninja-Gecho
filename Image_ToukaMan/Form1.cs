@@ -32,6 +32,7 @@ namespace Image_ToukaMan
 
         private Bitmap? currentBitmap;
         private string? currentFilePath;
+        private ConversionOverlayForm? conversionOverlay;
         private bool isDirty;
         private EditMode currentMode = EditMode.Fill;
         private bool isRectangleDragging;
@@ -150,6 +151,7 @@ namespace Image_ToukaMan
             colorModeMenuItem.Click += (_, _) => SetEditMode(EditMode.ColorSelect);
             eraserModeMenuItem.Click += (_, _) => SetEditMode(EditMode.Eraser);
             finishMenuItem.Click += (_, _) => FinishEdges();
+            convertMenuItem.Click += (_, _) => ShowConversionOverlay();
             usageMenuItem.Click += (_, _) => ShowHelpMessage();
 
             toolbarVisibleMenuItem.CheckedChanged += (_, _) => toolStrip1.Visible = toolbarVisibleMenuItem.Checked;
@@ -331,15 +333,18 @@ namespace Image_ToukaMan
         {
             if (e.Data?.GetData(DataFormats.FileDrop) is string[] files && files.Length > 0)
             {
-                if (Directory.Exists(files[0]))
+                var imageFiles = files.Where(IsSupportedImageFile).ToArray();
+
+                // フォルダを含む、または複数画像のドロップは拡張子変換として扱う
+                if (files.Any(Directory.Exists) || imageFiles.Length > 1)
                 {
-                    ConvertDroppedFolderToPng(files[0]);
+                    ConvertDroppedPaths(files);
                     return;
                 }
 
-                if (IsSupportedImageFile(files[0]))
+                if (imageFiles.Length == 1)
                 {
-                    LoadImageFromFile(files[0]);
+                    HandleSingleImageDrop(imageFiles[0]);
                 }
 
                 return;
@@ -349,6 +354,60 @@ namespace Image_ToukaMan
             {
                 using var bitmap = new Bitmap(image);
                 LoadBitmap(bitmap, null);
+            }
+        }
+
+        //-------------------------------------------------------------------------------
+        // 単体画像のドロップ時に編集用に開くか拡張子変換するかを選択させる処理
+        //-------------------------------------------------------------------------------
+        private void HandleSingleImageDrop(string filePath)
+        {
+            var openButton = new TaskDialogButton("編集用に開く");
+            var convertButton = new TaskDialogButton("拡張子を変換");
+            var page = new TaskDialogPage
+            {
+                Caption = "画像のドロップ",
+                Heading = "ドロップした画像の処理を選択してください。",
+                Text = Path.GetFileName(filePath),
+                Buttons = { openButton, convertButton, TaskDialogButton.Cancel }
+            };
+
+            var result = TaskDialog.ShowDialog(this, page);
+            if (result == openButton)
+            {
+                LoadImageFromFile(filePath);
+            }
+            else if (result == convertButton)
+            {
+                ConvertDroppedPaths([filePath]);
+            }
+        }
+
+        //-------------------------------------------------------------------------------
+        // 画像変換の導線となる半透明スクリーンを表示する処理
+        //-------------------------------------------------------------------------------
+        private void ShowConversionOverlay()
+        {
+            if (conversionOverlay is { IsDisposed: false })
+            {
+                conversionOverlay.Activate();
+                return;
+            }
+
+            conversionOverlay = new ConversionOverlayForm(this, ConvertDroppedPaths);
+            conversionOverlay.FormClosed += (_, _) => conversionOverlay = null;
+            conversionOverlay.Show(this);
+        }
+
+        //-------------------------------------------------------------------------------
+        // 表示中の半透明スクリーンを閉じる処理
+        //-------------------------------------------------------------------------------
+        private void CloseConversionOverlay()
+        {
+            if (conversionOverlay is { IsDisposed: false } overlay)
+            {
+                // ドロップイベント処理中でも安全に閉じられるよう遅延実行する
+                overlay.BeginInvoke(overlay.Close);
             }
         }
 

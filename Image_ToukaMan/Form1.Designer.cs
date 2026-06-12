@@ -54,6 +54,7 @@ namespace Image_ToukaMan
             viewMenuItem = new ToolStripMenuItem();
             toolbarVisibleMenuItem = new ToolStripMenuItem();
             statusbarVisibleMenuItem = new ToolStripMenuItem();
+            convertMenuItem = new ToolStripMenuItem();
             helpMenuItem = new ToolStripMenuItem();
             usageMenuItem = new ToolStripMenuItem();
             toolStrip1 = new ToolStrip();
@@ -105,7 +106,7 @@ namespace Image_ToukaMan
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileMenuItem, editMenuItem, viewMenuItem, helpMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileMenuItem, editMenuItem, viewMenuItem, convertMenuItem, helpMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1320, 28);
@@ -264,9 +265,15 @@ namespace Image_ToukaMan
             statusbarVisibleMenuItem.Name = "statusbarVisibleMenuItem";
             statusbarVisibleMenuItem.Size = new Size(186, 26);
             statusbarVisibleMenuItem.Text = "ステータスバー(&S)";
-            // 
+            //
+            // convertMenuItem
+            //
+            convertMenuItem.Name = "convertMenuItem";
+            convertMenuItem.Size = new Size(86, 24);
+            convertMenuItem.Text = "画像変換(&C)";
+            //
             // helpMenuItem
-            // 
+            //
             helpMenuItem.DropDownItems.AddRange(new ToolStripItem[] { usageMenuItem });
             helpMenuItem.Name = "helpMenuItem";
             helpMenuItem.Size = new Size(79, 24);
@@ -592,6 +599,7 @@ namespace Image_ToukaMan
         private ToolStripMenuItem viewMenuItem;
         private ToolStripMenuItem toolbarVisibleMenuItem;
         private ToolStripMenuItem statusbarVisibleMenuItem;
+        private ToolStripMenuItem convertMenuItem;
         private ToolStripMenuItem helpMenuItem;
         private ToolStripMenuItem usageMenuItem;
         private ToolStrip toolStrip1;

@@ -422,7 +422,8 @@ namespace Image_ToukaMan
                 "左クリックで透過または半透明化します。\r\n" +
                 "塗りつぶしは連続領域、色選択は同色全体、四角形は範囲指定、消しゴムはドラッグ対応です。\r\n" +
                 "四角形と消しゴムは Shift を押しながら使うと不透明(255)へ戻せます。\r\n" +
-                "Ctrl+マウスホイールで拡大率を変更できます。";
+                "Ctrl+マウスホイールで拡大率を変更できます。\r\n" +
+                "メニューの「画像変換」から、画像やフォルダのドラッグ&ドロップで PNG / JPEG / BMP への一括変換ができます。";
 
             MessageBox.Show(this, text, "使い方", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
