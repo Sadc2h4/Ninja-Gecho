@@ -4,6 +4,11 @@
 ![Platform](https://img.shields.io/badge/platform-Windows%20x64-0078D4?style=flat-square&logo=windows&logoColor=white)
 ![Architecture](https://img.shields.io/badge/arch-x64-gray?style=flat-square)
 
+<img width="700" height="600" alt="MainConsoleBG" src="https://github.com/user-attachments/assets/4319c047-d691-429d-8ebe-1e44d76801ea" />
+
+
+## 概要
+
 Ninja_Gecho is a lightweight Windows tool for making image backgrounds transparent.  
 画像を開いて,クリック操作で背景や指定範囲を透過 PNG として保存できます.
 本アプリケーションは画像の背景や指定した場所を手軽に透過して保存するために作成されました.
@@ -11,7 +16,7 @@ Ninja_Gecho is a lightweight Windows tool for making image backgrounds transpare
 
 ## ダウンロード
 
-<a href="https://github.com/Sadc2h4/Ninja-Gecho/releases/tag/v1.3">
+<a href="https://github.com/Sadc2h4/Ninja-Gecho/releases/tag/v1.4">
   <img
     src="https://raw.githubusercontent.com/Sadc2h4/brand-assets/main/button/Download_Button_1.png"
     alt="Download .zip"
